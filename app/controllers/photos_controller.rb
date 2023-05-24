@@ -14,7 +14,13 @@ class PhotosController < ApplicationController
 
     @the_photo = matching_photos.at(0)
 
-    render({ :template => "photos/show.html.erb" })
+    if @the_photo == nil
+      redirect_to("/404")
+    else
+      @commenter = Comment.where({:photo_id =>@the_photo.id})
+      render ({ :template => "photos/show.html.erb"})
+    end
+
   end
 
   def create

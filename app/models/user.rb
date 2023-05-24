@@ -16,4 +16,13 @@ class User < ApplicationRecord
   validates :email, :uniqueness => { :case_sensitive => false }
   validates :email, :presence => true
   has_secure_password
+
+  def own_photos
+    my_id = self.id
+
+    matching_photos = Photo.where({ :owner_id => my_id })
+
+    return matching_photos
+  end
+
 end

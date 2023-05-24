@@ -4,21 +4,14 @@
       Photo #<%= @the_photo.id %> details
     </h1>
 
-    <div>
-      <div>
-        <a href="/photos">
-          Go back
-        </a>
-      </div>
-
-      <div>
-        <a href="/delete_photo/<%= @the_photo.id %>">
-          Delete photo
-        </a>
-      </div>
-    </div>
-
     <dl>
+      <dt>
+        Image
+      </dt>
+      <dd>
+        <img src="<%= @the_photo.image %>">
+      </dd>
+
       <dt>
         Caption
       </dt>
@@ -27,6 +20,24 @@
       </dd>
 
       <dt>
+        Owner
+      </dt>
+      <dd>
+        <%= @the_photo.poster.username %>
+      </dd>
+      <dt>
+        Posted
+      </dt>
+      <dd>
+        <%= time_ago_in_words(@the_photo.created_at) %> ago
+      </dd>
+      <dt>
+        Likes count
+      </dt>
+      <dd>
+        <%= @the_photo.likes_count %>
+      </dd>
+      <dt>
         Comments count
       </dt>
       <dd>
@@ -34,98 +45,56 @@
       </dd>
 
       <dt>
-        Likes count
+        Fans
       </dt>
       <dd>
-        <%= @the_photo.likes_count %>
+        TBD
       </dd>
 
       <dt>
-        Owner
+        Add a fan
       </dt>
       <dd>
-        <%= @the_photo.owner_id %>
+        TBD
       </dd>
 
-      <dt>
-        Image
-      </dt>
-      <dd>
-        <%= @the_photo.image %>
-      </dd>
-
-      <dt>
-        Created at
-      </dt>
-      <dd>
-        <%= time_ago_in_words(@the_photo.created_at) %> ago
-      </dd>
-
-      <dt>
-        Updated at
-      </dt>
-      <dd>
-        <%= time_ago_in_words(@the_photo.updated_at) %> ago
-      </dd>
     </dl>
   </div>
 </div>
 
-<hr>
+<h2>Comments</h2>
 
+<table border="0">
+  <tr>
+    <th>
+      Commenter
+    </th>
+    <th>
+      Comment
+    </th>
+    <th>
+      Posted
+    </th>
+  </tr>
+  
+  <% @commenter.each do |a_comment|%>
+    <tr>
+      <td><%= a_comment.commenter.username %></td>
+      <td><%= a_comment.body %></td>
+      <td><%= time_ago_in_words(a_comment.created_at) %></td>
+    </tr>
+  <%end%>
+</table>
 
-<div>
-  <div>
-    <h2>
-      Edit photo
-    </h2>
+<h3>Add a new comment</h3>
+<form action="/insert_comment_record">
+  <input id="browser_photo_id" type="hidden" value="<%= @the_photo.id %>" name="input_photo_id">
 
-    <form action="/modify_photo/<%= @the_photo.id %>"  method="post" >
-      <div>
-        <label for="caption_box">
-          Caption
-        </label>
+  <input id="browser_author_id" type="hidden" value="<%= @current_user.id %>"name="input_author_id">
 
-        <textarea id="caption_box" name="query_caption"><%= @the_photo.caption %></textarea>
-      </div>
+  <label for="browser_comment">Comment</label>
+  <textarea id="browser_comment" name="input_body" placeholder="Enter a comment..."></textarea>
 
-      <div>
-        <label for="comments_count_box">
-          Comments count
-        </label>
-
-        <input type="text" id="comments_count_box" name="query_comments_count" value="<%= @the_photo.comments_count %>">
-      </div>
-
-      <div>
-        <label for="likes_count_box">
-          Likes count
-        </label>
-
-        <input type="text" id="likes_count_box" name="query_likes_count" value="<%= @the_photo.likes_count %>">
-      </div>
-
-      <div>
-        <label for="owner_id_box">
-          Owner
-        </label>
-
-        <input type="text" id="owner_id_box" name="query_owner_id" value="<%= @the_photo.owner_id %>">
-      </div>
-
-      <div>
-        <label for="image_box">
-          Image
-        </label>
-
-        <input type="text" id="image_box" name="query_image" value="<%= @the_photo.image %>">
-      </div>
-
-      <button>
-        Update photo
-      </button>
-    </form>
-  </div>
-</div>
-
+  <button>Add comment</button>
+</form>
 <hr>
