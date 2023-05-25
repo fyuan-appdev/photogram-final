@@ -25,4 +25,18 @@ class User < ApplicationRecord
     return matching_photos
   end
 
+  def requests_sent
+    my_id = self.id
+
+    sending_requests = FollowRequest.where({ :sender_id => my_id })
+    
+    return sending_requests
+  end
+
+  def requests_received
+    my_id = self.id
+    receiving_requests = FollowRequest.where({ :recipient_id => my_id })
+    return receiving_requests
+  end
+
 end

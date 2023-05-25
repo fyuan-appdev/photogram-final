@@ -8,27 +8,30 @@ class PhotosController < ApplicationController
   end
 
   def show
-    the_id = params.fetch("path_id")
-
-    matching_photos = Photo.where({ :id => the_id })
-
-    @the_photo = matching_photos.at(0)
-
-    if @the_photo == nil
-      redirect_to("/404")
+    if @current_user == nil
+      redirect_to("/user_sign_in", { :alert => "You have to sign in first." })
     else
-      @commenter = Comment.where({:photo_id =>@the_photo.id})
-      render ({ :template => "photos/show.html.erb"})
-    end
+      the_id = params.fetch("path_id")
 
+      matching_photos = Photo.where({ :id => the_id })
+
+      @the_photo = matching_photos.at(0)
+
+      if @the_photo == nil
+        redirect_to("/404")
+      else
+        @commenter = Comment.where({:photo_id =>@the_photo.id})
+        render ({ :template => "photos/show.html.erb"})
+      end
+    end
   end
 
   def create
     the_photo = Photo.new
     the_photo.caption = params.fetch("query_caption")
-    the_photo.comments_count = params.fetch("query_comments_count")
-    the_photo.likes_count = params.fetch("query_likes_count")
-    the_photo.owner_id = params.fetch("query_owner_id")
+    the_photo.comments_count = 0
+    the_photo.likes_count = 0
+    the_photo.owner_id = @current_user.id
     the_photo.image = params.fetch("query_image")
 
     if the_photo.valid?

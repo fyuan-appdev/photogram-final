@@ -1,7 +1,5 @@
 <h1>List of users</h1>
 
-<hr>
-
 <table border="1">
   <tr>
     <th>
@@ -34,9 +32,30 @@
     </td>
 
     <%if @current_user!= nil%>
-
-      <td>Follow</td>
-    
+    <% checker = @current_user.requests_sent.where({ :recipient_id => a_user.id }).first %>
+      <% if checker == nil %>
+        <td>
+          <form action="/insert_follow_request" method="post">
+          <input type="hidden" name="query_recipient_id" value="<%= a_user.id %>">
+          <button>Follow</button>
+          </form>
+        </td>
+      <% else %>
+        <% if checker.status == "pending" %>
+        <td> 
+        Request sent.
+        <a href="/delete_follow_request/<%= checker.id %>">
+        Cancel
+        </a>
+        </td>
+        <% elsif checker.status == "accepted" %>
+        <td>
+        <a href="/delete_follow_request/<%= checker.id %>">Unfollow</a>
+        </td>
+        <% else %>
+        <td></td>
+        <% end %>
+      <% end %>
     <%end%>
 
     <td>
