@@ -1,0 +1,50 @@
+<h1><%= @user.username%></h1>
+
+<dl>
+  <dt>Private</dt>
+  <dd><%= @user.private%></dd>
+
+  <dt>Followers</dt>
+  <dd><%= @user.requests_received.where({:status => "accepted"}).count %></div>
+
+  <dt>Following</dt>
+  <dd><%= @user.requests_sent.where({:status => "accepted"}).count %></dd>
+
+</dl>
+
+<% following = @user.requests_sent.where({:status => "accepted"})%>
+<% counter = Array.new %>
+<% following.each do |a_following| %>
+  <% a_following.recipient_id %>
+  <% likes = Like.where({:fan_id=>a_following.recipient_id}) %>
+  <% likes.each do |a_like|%>
+    <% counter.push(a_like.photo_id)%>
+  <% end %>
+<% end %>
+<%likes_counter = counter.uniq%>
+
+<h2>Feed (<%= likes_counter.count %>)</h2>
+<table border="1">
+  <tr>
+    <th>Image</th>
+    <th>Owner</th>
+    <th>Caption</th>
+    <th>Posted</th>
+    <th>Likes</th>
+    <th></th>
+  </tr>
+
+<% likes_counter.each do |a_like|%>
+  <% a_photo=Photo.where({:id=>a_like}).first %>
+  <tr> 
+    <td><img src="<%= a_photo.image %>"></td>
+    <td><%= @user.username %></td>
+    <td><%= a_photo.caption %></td>
+    <td><%= a_photo.created_at %></td>
+    <td><%= a_photo.id %></td>
+
+    <td>
+    <a href="/photos/<%= a_photo.id %>">Show details</a>
+    </td>
+  </tr>
+<%end%>

@@ -25,4 +25,12 @@ class UsersController < ApplicationController
       end
     end
   end
+
+  def feed
+    input_username = params.fetch("username")
+    matching_username = User.where({:username=> input_username})
+    @user = matching_username.at(0)
+    render ({ :template => "user_template/feed.html.erb"})
+  end
+
 end
