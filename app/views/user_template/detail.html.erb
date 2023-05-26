@@ -32,9 +32,15 @@
   <% end %>
 
   <h4>Pending follow requests</h4>
+  <%  pending = @user.requests_received.where({:status => "pending"})%>
   <ul><%= @user.requests_received.where({:status => "pending"}).count%></ul>
 
-  </dd>
+
+  <% @user.requests_received.where({:status => "pending"}).each do |a_fan| %>
+    <%= a_fan.sender_id %>
+    <%= User.where({:id => a_fan.sender_id }).first.username%>
+
+  <% end %>
 
   <dt>Following</dt>
   <dd><%= @user.requests_sent.where({:status => "accepted"}).count %></dd>
@@ -68,7 +74,7 @@
     <th></th>
   </tr>
 
-<% @user.own_photos .each do |a_photo|%>
+<% @user.own_photos.each do |a_photo|%>
   <tr>
     <td><img src="<%= a_photo.image %>"></td>
     <td><%= @user.username %></td>
